@@ -12,6 +12,8 @@
 
 # profiling files
 chrome-profiler-events*.json
+env.json
+env.prod.json
 
 # IDEs and editors
 /.idea
@@ -23,15 +25,12 @@ chrome-profiler-events*.json
 *.sublime-workspace
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/
 .history/*
 
 # misc
 /.angular/cache
+/.firebase
 /.sass-cache
 /connect.lock
 /coverage

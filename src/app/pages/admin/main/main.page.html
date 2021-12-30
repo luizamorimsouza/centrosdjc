@@ -1,0 +1,159 @@
+<div class="wrapper">
+  <div class="main">
+
+    <main class="content">
+      <div class="container-fluid p-0">
+        <h1 class="h3 mb-3">Cadastros</h1>
+
+        <div class="row">
+          <div class="col-md-4 col-xl-3">
+
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Adicionar Status</h5>
+              </div>
+
+              <div class="card-body">
+                <input type="text" class="form-control" require placeholder="Descrição" [(ngModel)]="labelStatus">
+
+                <select class="form-select mt-2" [(ngModel)]="colorStatus">
+                  <option value="success">Verde</option>
+                  <option value="danger">Vermelho</option>
+                  <option value="info">Azul</option>
+                </select>
+
+                <div class="mt-2 d-flex flex-row-reverse bd-highlight">
+                  <button class="btn btn-primary" (click)="createStatus()">Adicionar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Status</h5>
+              </div>
+              <div class="card-body text-center">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Descrição</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let status of statuses">
+                      <td>
+                        <span class="text-{{ status.color }}">
+                          {{ status.label }}
+                        </span>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger" (click)="deleteStatus(status.id)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-8 col-xl-9">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Adicionar Beneficiário</h5>
+              </div>
+              <div class="card-body h-100">
+                <input type="text" require class="form-control" placeholder="CPF" [(ngModel)]="cpfBeneficiary">
+
+                <input type="text" require class="form-control mt-2" placeholder="Nome" [(ngModel)]="nameBeneficiary">
+
+                <select class="form-select mt-2" require [(ngModel)]="statusBeneficiary">
+                  <option value="" selected>-</option>
+                  <option *ngFor="let status of statuses" [value]="status.id">{{ status.label }}</option>
+                </select>
+
+                <div class="mt-2 d-flex flex-row-reverse bd-highlight">
+                  <button class="btn btn-primary" (click)="createBeneficiary()">Adicionar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Beneficiários</h5>
+              </div>
+              <div class="card-body text-center">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <div *ngFor="let beneficiary of beneficiaries" style="display: contents;">
+                        <tr>
+                          <td>{{ beneficiary.cpf }}</td>
+                          <td>{{ beneficiary.name }}</td>
+                          <td>
+                            <span class="text-{{ beneficiary.status.color }}">
+                              {{ beneficiary.status.label }}
+                            </span>
+                          </td>
+                          <td>
+                            <button class="btn btn-warning me-2" (click)="editBeneficiary(beneficiary)">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                              </svg>
+                            </button>
+                            <button class="btn btn-danger" (click)="deleteBeneficiary(beneficiary.id)">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                              </svg>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr *ngIf="edit[beneficiary.id]">
+                          <td colspan="4" class="bg-light border-3 p-3">
+                            <input type="text" require class="form-control" placeholder="CPF"
+                              [(ngModel)]="edit[beneficiary.id].cpf">
+
+                            <input type="text" require class="form-control mt-2" placeholder="Nome"
+                              [(ngModel)]="edit[beneficiary.id].name">
+
+                            <select class="form-select mt-2" require [(ngModel)]="edit[beneficiary.id].status.id">
+                              <option value="" selected>-</option>
+                              <option *ngFor="let status of statuses" [value]="status.id">{{ status.label }}</option>
+                            </select>
+
+                            <div class="mt-2 d-flex flex-row-reverse bd-highlight">
+                              <button class="btn btn-primary ms-2"
+                                (click)="updateBeneficiary(beneficiary)">Atualizar</button>
+                              <button class="btn btn-secondary" (click)="cancelUpdate(beneficiary.id)">Canelar</button>
+                            </div>
+                          </td>
+                        </tr>
+                      </div>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>

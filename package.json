@@ -1,12 +1,14 @@
 {
   "name": "centrosdjc",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "deploy": "firebase deploy",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:deploy": "npm run build && npm run deploy"
   },
   "private": true,
   "dependencies": {
@@ -18,6 +20,11 @@
     "@angular/platform-browser": "~13.1.0",
     "@angular/platform-browser-dynamic": "~13.1.0",
     "@angular/router": "~13.1.0",
+    "@ionic/storage-angular": "3.0.6",
+    "crypto-js": "4.1.1",
+    "firebase": "9.6.1",
+    "moment": "2.29.1",
+    "ngx-toastr": "14.2.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -26,6 +33,7 @@
     "@angular-devkit/build-angular": "~13.1.2",
     "@angular/cli": "~13.1.2",
     "@angular/compiler-cli": "~13.1.0",
+    "@types/crypto-js": "4.1.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.10.0",
@@ -35,5 +43,6 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "typescript": "~4.5.2"
-  }
+  },
+  "description": "Application in Ionic Angular for displaying the result of the selection of beneficiaries of the Dom João Costa Social Center"
 }
