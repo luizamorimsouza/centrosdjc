@@ -18,14 +18,14 @@
                       <h1 class="h2">Bem vindo!</h1>
 
                       <div class="alert alert-{{ status.color }} fade show" role="alert" *ngIf="status">
-                        {{ status.label }}
+                        <b>{{ name }}:</b>&nbsp;<u>{{ status.label }}</u>
                       </div>
 
                     </div>
 
                     <div class="mb-3">
-                      <label class="form-label">Digite o CPF ou Nome:</label>
-                      <input class="form-control form-control-lg" type="text" placeholder="CPF ou Nome do Beneficiário"
+                      <label class="form-label">Digite o Nome:</label>
+                      <input class="form-control form-control-lg" type="text" placeholder="Nome do Beneficiário"
                         [(ngModel)]="search" autofocus />
                     </div>
 

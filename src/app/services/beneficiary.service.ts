@@ -14,20 +14,36 @@ export class BeneficiaryService {
     private firebase: FirebaseService
   ) { }
 
-  private normalizeCPF(cpf: string): string {
-    return !!cpf ? cpf.replace(/[^0-9]/g, '') : cpf;
+  private normalizeCPF(cpf: string | undefined): string | undefined {
+    return !!cpf ? cpf.replace(/[^0-9]/g, '').trim() : cpf;
+  }
+
+  private normalizeName(name: string, isSlug = false): string {
+    if (!!name) {
+      name = name.trim();
+      if (isSlug) {
+        name = name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      }
+    }
+
+    return name;
   }
 
   public async create(name: string, cpf: string, status: Status): Promise<Beneficiary> {
-    cpf = this.normalizeCPF(cpf);
+    cpf = this.normalizeCPF(cpf) as string;
+    name = this.normalizeName(name);
 
     const db = await this.firebase.database();
     const beneficiary = new Beneficiary()
-    beneficiary.cpf = encrypt(cpf);
-    beneficiary.cpfHash = hash(cpf);
     beneficiary.name = encrypt(name);
-    beneficiary.nameHash = hash(name.toLowerCase());
+    beneficiary.nameHash = hash(this.normalizeName(name, true));
     beneficiary.status = status;
+
+    if (cpf) {
+      beneficiary.cpf = encrypt(cpf);
+      beneficiary.cpfHash = hash(cpf);
+    }
+
     // Get a key for a new Beneficiary.
     beneficiary.id = push(child(ref(db), '/beneficiaries')).key as string;
 
@@ -37,23 +53,30 @@ export class BeneficiaryService {
     await update(ref(db), updates);
 
     beneficiary.name = decrypt(beneficiary.name);
-    beneficiary.cpf = decrypt(beneficiary.cpf);
+    
+    if (cpf) {
+      beneficiary.cpf = cpf;
+    }
 
     return beneficiary;
   }
 
   public async update(beneficiary: Beneficiary): Promise<Beneficiary> {
     const cpf = this.normalizeCPF(beneficiary.cpf);
+    const name = this.normalizeName(beneficiary.name);
 
     const db = await this.firebase.database();
     const updatedBeneficiary: Beneficiary = {
       id: beneficiary.id,
-      cpf: encrypt(cpf),
-      cpfHash: hash(cpf),
       name: encrypt(beneficiary.name),
-      nameHash: hash(beneficiary.name.toLowerCase()),
+      nameHash: hash(this.normalizeName(name, true)),
       status: beneficiary.status
     };
+
+    if (cpf) {
+      updatedBeneficiary.cpf = encrypt(cpf);
+      updatedBeneficiary.cpfHash = hash(cpf);
+    }
 
     // Write the new beneficiary's data
     const updates: any = {};
@@ -75,32 +98,22 @@ export class BeneficiaryService {
     const snapshot = await get(ref(db, '/beneficiaries'));
 
     snapshot.forEach((childSnapshot) => {
-      const childData = childSnapshot.val();
-      const beneficiary: Beneficiary = {
-        id: childData.id,
-        cpf: decrypt(childData.cpf),
-        cpfHash: childData.cpfHash,
-        name: decrypt(childData.name),
-        nameHash: childData.nameHash,
-        status: childData.status
-      }
-
-      beneficiaries.push(beneficiary);
+      beneficiaries.push(new Beneficiary(childSnapshot.val()));
     });
 
     return beneficiaries;
   }
 
-  public async getStatus(search: string): Promise<Status> {
+  public async search(search: string): Promise<Beneficiary> {
     // OBS Space in final regex is important
     const isName = /^[a-zA-Z\u00C0-\u00ff ]+$/.test(search);
-    let field = 'cpfHash';
+    let field = 'nameHash';
 
     if (isName) {
-      search = search.toLowerCase();
-      field = 'nameHash';
+      search = this.normalizeName(search, true);
     } else {
-      search = this.normalizeCPF(search);
+      field = 'cpfHash';
+      search = this.normalizeCPF(search) as string;
     }
 
     const db = await this.firebase.database();
@@ -112,6 +125,6 @@ export class BeneficiaryService {
     }
 
     const snapshotData = snapshot.val();
-    return snapshotData[Object.keys(snapshotData)[0]].status;
+    return new Beneficiary(snapshotData[Object.keys(snapshotData)[0]]);
   }
 }

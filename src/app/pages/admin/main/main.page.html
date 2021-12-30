@@ -69,8 +69,6 @@
                 <h5 class="card-title mb-0">Adicionar Beneficiário</h5>
               </div>
               <div class="card-body h-100">
-                <input type="text" require class="form-control" placeholder="CPF" [(ngModel)]="cpfBeneficiary">
-
                 <input type="text" require class="form-control mt-2" placeholder="Nome" [(ngModel)]="nameBeneficiary">
 
                 <select class="form-select mt-2" require [(ngModel)]="statusBeneficiary">
@@ -93,7 +91,6 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">CPF</th>
                         <th scope="col">Nome</th>
                         <th scope="col">Status</th>
                         <th scope="col"></th>
@@ -102,7 +99,6 @@
                     <tbody>
                       <div *ngFor="let beneficiary of beneficiaries" style="display: contents;">
                         <tr>
-                          <td>{{ beneficiary.cpf }}</td>
                           <td>{{ beneficiary.name }}</td>
                           <td>
                             <span class="text-{{ beneficiary.status.color }}">
@@ -126,9 +122,6 @@
                         </tr>
                         <tr *ngIf="edit[beneficiary.id]">
                           <td colspan="4" class="bg-light border-3 p-3">
-                            <input type="text" require class="form-control" placeholder="CPF"
-                              [(ngModel)]="edit[beneficiary.id].cpf">
-
                             <input type="text" require class="form-control mt-2" placeholder="Nome"
                               [(ngModel)]="edit[beneficiary.id].name">
 

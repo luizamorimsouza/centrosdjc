@@ -10,6 +10,7 @@ import { BeneficiaryService } from 'src/app/services/beneficiary.service';
 export class HomePage {
 
   search!: string;
+  name!: string;
   status!: Status;
   loading = false;
 
@@ -21,8 +22,10 @@ export class HomePage {
     this.loading = true;
 
     try {
-      this.status = await this.beneficiaryService.getStatus(this.search);
+      const beneficiary = await this.beneficiaryService.search(this.search);
       this.search = '';
+      this.name = beneficiary.name;
+      this.status = beneficiary.status;
     } catch (e: any) {
       const message = e.msg || e;
       if (!e.msg) {
